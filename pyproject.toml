@@ -1,0 +1,30 @@
+[project]
+name = "agent-sandbox"
+version = "0.1.0"
+description = "Agent playground"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "google-adk>=1.19.0",
+]
+
+[project.scripts]
+run-agent = "my_adk_agent.run_agent:main"
+
+[project.optional-dependencies]
+dev = [
+    "mypy>=1.18.2",
+    "pre-commit>=4.5.0",
+    "pytest>=9.0.1",
+    "pytest-cov>=7.0.0",
+    "ruff>=0.14.6",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.18.2",
+    "pre-commit>=4.5.0",
+    "pytest>=9.0.1",
+    "pytest-cov>=7.0.0",
+    "ruff>=0.14.6",
+]
