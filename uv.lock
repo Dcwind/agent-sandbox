@@ -24,15 +24,6 @@ dev = [
     { name = "ruff" },
 ]
 
-[package.dev-dependencies]
-dev = [
-    { name = "mypy" },
-    { name = "pre-commit" },
-    { name = "pytest" },
-    { name = "pytest-cov" },
-    { name = "ruff" },
-]
-
 [package.metadata]
 requires-dist = [
     { name = "google-adk", specifier = ">=1.19.0" },
@@ -43,15 +34,6 @@ requires-dist = [
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.14.6" },
 ]
 provides-extras = ["dev"]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "mypy", specifier = ">=1.18.2" },
-    { name = "pre-commit", specifier = ">=4.5.0" },
-    { name = "pytest", specifier = ">=9.0.1" },
-    { name = "pytest-cov", specifier = ">=7.0.0" },
-    { name = "ruff", specifier = ">=0.14.6" },
-]
 
 [[package]]
 name = "aiosqlite"
