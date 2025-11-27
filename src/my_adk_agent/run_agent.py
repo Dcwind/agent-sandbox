@@ -1,3 +1,4 @@
+import argparse
 import asyncio
 import os
 import sys
@@ -7,6 +8,27 @@ from typing import Iterable
 from google.adk.runners import InMemoryRunner
 
 from my_adk_agent.agents import build_agent
+
+
+def _extract_text(response: object) -> str:
+    """
+    Try to extract a human-friendly text reply from an ADK response/event.
+    Falls back to repr(response) if no known attributes are present.
+    """
+    # Gemini responses often expose .text directly.
+    text = getattr(response, "text", None)
+    if isinstance(text, str) and text.strip():
+        return text
+
+    # ADK events commonly have .content.parts with .text fields.
+    content = getattr(response, "content", None)
+    parts = getattr(content, "parts", None) if content else None
+    if parts:
+        texts = [getattr(p, "text", "") for p in parts if getattr(p, "text", "")]
+        if texts:
+            return "\n".join(texts)
+
+    return repr(response)
 
 
 def _validate_env() -> str:
@@ -20,7 +42,7 @@ def _validate_env() -> str:
 async def run_prompts(prompts: Iterable[str]) -> None:
     _validate_env()
     agent = build_agent()
-    runner = InMemoryRunner(agent=agent)
+    runner = InMemoryRunner(agent=agent, app_name="my_adk_agent")
 
     for prompt in prompts:
         print(f"\n>>> {prompt}")
@@ -33,15 +55,20 @@ async def run_prompts(prompts: Iterable[str]) -> None:
             continue
         duration = time.monotonic() - start
         print(f"(completed in {duration:.2f}s)")
-        print(response)
+        print(_extract_text(response))
 
 
 async def _async_main() -> None:
-    prompts = (
-        "What is Agent Development Kit from Google? What languages is the SDK available in?",
-        "What's the current time in Stockholm?",
+    parser = argparse.ArgumentParser(
+        description="Run the ADK agent with one or more prompts."
     )
-    await run_prompts(prompts)
+    parser.add_argument(
+        "prompts",
+        nargs="+",
+        help="Prompt(s) to send to the agent. Provide multiple to run sequentially.",
+    )
+    args = parser.parse_args()
+    await run_prompts(args.prompts)
 
 
 def main() -> None:

@@ -7,7 +7,7 @@ Run a simple Google ADK agent locally using `uv`.
 2) Create/activate venv (recommended): `uv venv .venv && source .venv/bin/activate`
 3) Install deps (editable package + dev tools): `uv pip install -e .[dev]`
 4) Set your key: `export GOOGLE_API_KEY=your_key_here`
-5) Run: `uv run run-agent`
+5) Run with prompt(s): `uv run run-agent "your prompt here"` (you can pass multiple prompts in one command)
 
 No uv? Use standard venv/pip: `python -m venv .venv && source .venv/bin/activate && pip install -e .[dev] && python -m my_adk_agent.run_agent`
 
